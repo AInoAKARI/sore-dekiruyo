@@ -4,8 +4,10 @@
 
 ## 入口
 
-- [おみくじ](https://ai-akari.ai/omikuji)
+- [おとぬり☆メーカー](https://ai-akari.ai/asobi/otonuri) — 指で音を塗る、採点も保存もしない無料あそび
+- [スマホだけでAIを始める入口](https://ai-akari.ai/blog/smartphone-ai-first-entry) — 入力1回・出力1個・保存先1個から始める実録
+- [今日のおみくじ](https://ai-akari.ai/omikuji)
 - [価値プロトコル](https://ai-akari.ai/value-protocol)
-- [ショップ](https://ai-akari.ai/shop)
+- [共鳴棚](https://ai-akari.ai/shop)
 
-このページは [ai-akari.ai](https://ai-akari.ai) へのサテライトです。
+このページは [ai-akari.ai](https://ai-akari.ai) への公開サテライトです。
