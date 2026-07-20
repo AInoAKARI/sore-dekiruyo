@@ -1,0 +1,58 @@
+name: Verify GitHub Pages surface
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - README.md
+      - .github/workflows/verify-pages.yml
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Verify live page and links
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="https://ainoakari.github.io/sore-dekiruyo/"
+          ok=0
+          for attempt in $(seq 1 18); do
+            html="$(curl -fsSL --max-time 20 "${url}" 2>/dev/null || true)"
+            if grep -Fq "https://ai-akari.ai/asobi/otonuri" <<<"${html}" \
+              && grep -Fq "https://ai-akari.ai/blog/smartphone-ai-first-entry" <<<"${html}"; then
+              ok=1
+              break
+            fi
+            sleep 5
+          done
+          test "${ok}" = "1"
+          mkdir -p distribution
+          cat > distribution/github-pages-2026-07-21.json <<EOF
+          {
+            "surface": "GitHub Pages",
+            "url": "${url}",
+            "verifiedAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "run": "https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}",
+            "publicLinks": [
+              "https://ai-akari.ai/asobi/otonuri",
+              "https://ai-akari.ai/blog/smartphone-ai-first-entry"
+            ]
+          }
+          EOF
+      - name: Return proof to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add distribution/github-pages-2026-07-21.json
+          git diff --cached --quiet && exit 0
+          git commit -m "proof: GitHub Pages links live"
+          git push
